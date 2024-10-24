@@ -68,7 +68,7 @@ class Paddle(pygame.sprite.Sprite):
         if self.rect.y > (HEIGHT - self.height):
             self.rect.y = (HEIGHT - self.height)
 
-def game_mood(screen):
+def game_mode_choice(screen):
     font = pygame.font.Font(None, 36)
     mode = ""
 
@@ -123,3 +123,28 @@ def initialization_game():
     screen = pygame.display.set_mode((WIDHT, HEIGHT))
     pygame.display.set_caption("Ping Pong Game")
     return screen
+
+def play_game(screen):
+    mode = game_mode_choice(screen)
+    clock = pygame.time.Clock() # Important one !!
+
+    # We create players and balls here
+    paddle_player_A = Paddle(COLOR, WIDTH_PADDLE, HEIGHT_PADDLE)
+    paddle_player_A.rect.x = 0
+    paddle_player_A.rect.y = (HEIGHT - HEIGHT_PADDLE) // 2
+
+    paddle_player_B = Paddle(COLOR, WIDTH_PADDLE, HEIGHT_PADDLE)
+    paddle_player_B.rect.x = WIDHT - WIDTH_PADDLE
+    paddle_player_B.rect.y = (HEIGHT - HEIGHT_PADDLE) // 2
+
+    ball = Ball(COLOR, 2 * BALL_RADUIS, 2 * BALL_RADUIS, BALL_RADUIS)
+    ball.rect.centerx = WIDHT // 2
+    ball.rect.centery = HEIGHT // 2
+
+    # After defining the players and balls, We'll add all of them in the sprite
+    all_sprites_list = pygame.sprite.Group()
+    all_sprites_list.add(paddle_player_A)
+    all_sprites_list.add(paddle_player_B)
+    all_sprites_list.add(ball)
+
+    
