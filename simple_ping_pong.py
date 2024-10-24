@@ -102,7 +102,7 @@ def game_mode_choice(screen):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
-                    mode = "friend"
+                    mode = "Friend"
                 elif event.key == pygame.K_2:
                     mode = "AI"
                 elif event.key == pygame.K_ESCAPE:
@@ -147,4 +147,31 @@ def play_game(screen):
     all_sprites_list.add(paddle_player_B)
     all_sprites_list.add(ball)
 
-    
+    running = True
+    score_playerA, score_playerB = 0, 0
+
+    while running:
+        screen.fill(WHITE_COULEUR)
+        pygame.draw.line(screen, COLOR, [WIDHT // 2, 0], [WIDHT // 2, HEIGHT], 5)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        keys = pygame.get_pressed()
+        if mode == "Friend":
+            if keys[pygame.K_UP]:
+                paddle_player_B.move_up(SPEED_PADDLE)
+            if keys[pygame.K_DOWN]:
+                paddle_player_B.move_down(SPEED_PADDLE)
+            if keys[pygame.K_z]:
+                paddle_player_A.move_up(SPEED_PADDLE)
+            if keys[pygame.K_s]:
+                paddle_player_A.move_down(SPEED_PADDLE)
+        elif mode == "AI":
+            pass
+            """
+            TODO : IMPLEMENTATION OF IA PLAYER
+            """
+
+        ball.update()
