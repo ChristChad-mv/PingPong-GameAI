@@ -117,3 +117,9 @@ def game_mood(screen):
                     mode = "AI"
 
     return mode
+
+def initialization_game():
+    pygame.init()
+    screen = pygame.display.set_mode((WIDHT, HEIGHT))
+    pygame.display.set_caption("Ping Pong Game")
+    return screen
