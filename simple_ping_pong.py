@@ -182,6 +182,15 @@ def play_game(screen):
         if ball.rect.centerx > (WIDHT - BALL_RADUIS):
             (ball.rect.centerx, ball.rect.centery) = (WIDHT // 2, HEIGHT // 2)
             ball.velocity[0] *= -1
+            score_playerA += 1
+
+        if ball.rect.centerx < BALL_RADUIS:
+            (ball.rect.centerx, ball.rect.centery) = (WIDHT // 2, HEIGHT // 2)
+            ball.velocity[0] *= -1
+            score_playerB += 1
+
+        if ball.rect.centery > (HEIGHT - BALL_RADUIS) or ball.rect.centery < BALL_RADUIS:
+            ball.velocity[1] *= -1
         
         all_sprites_list.draw(screen)
 
