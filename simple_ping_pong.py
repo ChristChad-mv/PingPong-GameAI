@@ -198,3 +198,7 @@ def play_game(screen):
         if score_playerA == SCORE_MAX or score_playerB == SCORE_MAX:
             running = False
     pygame.quit()
+
+if __name__ == "__main__":
+    screen = initialization_game()
+    play_game(screen)
