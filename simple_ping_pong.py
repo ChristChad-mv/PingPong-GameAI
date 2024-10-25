@@ -175,3 +175,26 @@ def play_game(screen):
             """
 
         ball.update()
+
+        if pygame.sprite.collide_mask(ball, paddle_player_A) or pygame.sprite.collide_mask(ball, paddle_player_B):
+            ball.ball_bounce()
+
+        if ball.rect.centerx > (WIDHT - BALL_RADUIS):
+            (ball.rect.centerx, ball.rect.centery) = (WIDHT // 2, HEIGHT // 2)
+            ball.velocity[0] *= -1
+        
+        all_sprites_list.draw(screen)
+
+        pygame.font.init()
+        font = pygame.font.Font(None, 74)
+        text = font.render(str(score_playerA), 1, COLOR)
+        screen.blit(text, (WIDHT // 4, 10))
+        text = font.render(str(score_playerB), 1, COLOR)
+        screen.blit(text, (3*WIDHT // 4, 10))
+
+        pygame.display.flip()
+        clock.tick(60) # 60 FPS for the screen
+
+        if score_playerA == SCORE_MAX or score_playerB == SCORE_MAX:
+            running = False
+    pygame.quit()
