@@ -243,6 +243,27 @@ def play_game(screen):
             running = False
     pygame.quit()
 
+def quit_or_retry(screen):
+    font = pygame.font.Font(None, 36)
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background.fill(WHITE_COULEUR)
+    text1 = font.render("Game Over", True, COLOR)
+    text2 = font.render("Hit the space button to retry and ESC to quit", True, COLOR)
+
+    while True:
+        screen.blit(background, (0, 0))
+        screen.blit(text1, (WIDHT // 2 - text1.get_width() // 2, HEIGHT // 2 - 50))
+        screen.blit(text2, (WIDHT // 2 - text2.get_width() // 2, HEIGHT // 2))
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    return "replay"
+                elif event.key == pygame.K_ESCAPE:
+                    return "quit"
+
 if __name__ == "__main__":
     screen = initialization_game()
     play_game(screen)
