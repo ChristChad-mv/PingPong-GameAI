@@ -241,7 +241,11 @@ def play_game(screen):
 
         if score_playerA == SCORE_MAX or score_playerB == SCORE_MAX:
             running = False
-    pygame.quit()
+
+    choice = quit_or_retry(screen)
+    if choice == "quit":
+        pygame.quit()
+        quit()
 
 def quit_or_retry(screen):
     font = pygame.font.Font(None, 36)
