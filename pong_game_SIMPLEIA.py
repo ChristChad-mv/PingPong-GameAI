@@ -198,11 +198,16 @@ def play_game(screen):
                 paddle_player_A.move_up(SPEED_PADDLE)
             if keys[pygame.K_s]:
                 paddle_player_A.move_down(SPEED_PADDLE)
+
+        # If the user choose to play with AI_simple, the paddle or player A become the simple IA agent and user is the player B. So we define what's buttons users have to use to play
         elif mode == "AI":
-            pass
-            """
-            TODO : IMPLEMENTATION OF IA PLAYER
-            """
+            ball_position_y = ball.rect.y
+            paddle_player_A.simple_ai(ball_position_y, SPEED_PADDLE)
+
+            if keys[pygame.K_UP]:
+                paddle_player_B.move_up(SPEED_PADDLE)
+            if keys[pygame.K_DOWN]:
+                paddle_player_B.move_down(SPEED_PADDLE)
 
         ball.update()
 
