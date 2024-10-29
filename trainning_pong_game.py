@@ -56,7 +56,7 @@ class Ball(pygame.sprite.Sprite):
 
 class Paddle(pygame.sprite.Sprite):
 
-    def __init__(self, color, width, height):
+    def __init__(self, color, width, height, name, alpha=0.4, gamma=0.7, epsilon_decay=0.00001, epsilon_min=0.01, epsilon=1):
         super().__init__()
 
         self.image = pygame.Surface([width, height])
@@ -64,6 +64,14 @@ class Paddle(pygame.sprite.Sprite):
         self.image.set_colorkey(WHITE_COULEUR)
         self.width = width
         self.height = height
+
+        self.alpha = alpha
+        self.gamma = gamma
+        self.epsilon_decay = epsilon_decay
+        self.epsilon_min = epsilon_min
+        self.q_table = {}
+        self.rewards, self.episodes, self.mean = [], [], []
+        self.name = name
         
         pygame.draw.rect(self.image, color, [0, 0, self.width, self.height])
 
@@ -92,3 +100,19 @@ class Paddle(pygame.sprite.Sprite):
             self.rect.y = 0
         if self.rect.y  > (HEIGHT - self.height):
             self.rect.y = (HEIGHT - self.height)
+
+    def epsilon_greddy(self):
+        self.epsilon = max(self.epsilon_min, self.epsilon* (1 - self.epsilon_decay))
+
+    def get_actions(self, state):
+        if state not in self.q_table:
+            self.q_table[state] = np.zeros(3)
+
+        self.epsilon_greddy()
+
+        if np.random.uniform() < self.epsilon:
+            action = np.random.choice(3)
+        else:
+            action = np.argmax(self.q_table[state])
+
+        return action
