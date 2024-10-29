@@ -4,6 +4,9 @@ TRANNING AI
 
 import pygame
 import numpy as np
+import pickle
+import matplotlib.pyplot as plt
+import os
 
 # Some important variables
 COLOR = (255, 0, 0)
@@ -21,6 +24,10 @@ HEIGHT = 600
 
 # SIMPLE AI speed
 SIMPLE_AI_SPEED = 3
+
+# FPS for Frequency per second - It's so important to accelerate the speed of the game regarding the number or trainning iteration we want to have
+FPS = 520
+TRANNING = True
 
 # Create the basics element of the game
 class Ball(pygame.sprite.Sprite):
