@@ -116,3 +116,17 @@ class Paddle(pygame.sprite.Sprite):
             action = np.argmax(self.q_table[state])
 
         return action
+    
+
+    """
+    Update the q_table based on the actual state, the next state, the action taken by the agent and the reward
+    If the next state is not in the q_table, we can add it if not we can just add considering the state and the action
+    MORE DETAILS IN THE REPORT
+    """
+    def update_q_table(self, state, action, reward, next_state):
+        if next_state not in self.q_table:
+            self.q_table[next_state] = np.zeros(3)
+
+        td_target = reward + self.gamma * np.max(self.q_table[next_state])
+        td_error = td_target - self.q_table[state][action]
+        self.q_table[state][action] += self.alpha * td_error
