@@ -15,6 +15,7 @@ WIDTH_PADDLE = 10
 HEIGHT_PADDLE = 100
 SPEED_PADDLE = 10
 BALL_RADUIS = 10
+RADUIS = 10
 
 SCORE_MAX = 5
 
@@ -152,3 +153,29 @@ class Paddle(pygame.sprite.Sprite):
             plt.savefig(f"player_{self.name}_evolution.png")
         except OSError as e:
             print(f"Error while save the file : {e}")
+
+class Game:
+    def __init__(self, player_a, player_b):
+        pygame.init()
+        self.screen = pygame.display.set_mode((WIDHT, HEIGHT))
+        pygame.display.set_caption("Ping Pong Game Tranning AI")
+
+        self.player_a = player_a
+        self.player_a.rect.x = 0
+        self.player_a.rect.y = (HEIGHT - HEIGHT_PADDLE) // 2
+
+        self.player_b = player_b
+        self.player_b.rect.x = WIDHT - WIDTH_PADDLE
+        self.player_b.rect.y = (HEIGHT - HEIGHT_PADDLE) // 2
+
+        self.ball = Ball(COLOR, 2 * RADUIS, 2 * RADUIS, RADUIS)
+        self.ball.rect.centerx = WIDHT // 2
+        self.ball.rect.centery = HEIGHT // 2
+
+        self.all_sprites = pygame.sprite.Group()
+        self.all_sprites.add(self.player_a, self.player_b, self.ball)
+
+        self.fin = False
+        self.clock = pygame.time.Clock()
+        self.score_a, self.score_b = 0, 0
+        self.reward = 0
