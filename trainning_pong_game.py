@@ -130,3 +130,13 @@ class Paddle(pygame.sprite.Sprite):
         td_target = reward + self.gamma * np.max(self.q_table[next_state])
         td_error = td_target - self.q_table[state][action]
         self.q_table[state][action] += self.alpha * td_error
+
+    def save_model(self, episode):
+        folder_models = "models"
+        if not os.path.exists(folder_models):
+            os.makedirs(folder_models)
+        path_file = os.path.join(folder_models, f'player_{self.name}_{episode}_qtable.pkl')
+        with open(path_file, 'wb') as file:
+            pickle.dump(self.q_table, file)
+
+    
