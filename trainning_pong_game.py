@@ -179,3 +179,13 @@ class Game:
         self.clock = pygame.time.Clock()
         self.score_a, self.score_b = 0, 0
         self.reward = 0
+
+    def get_reward(self):
+        reward_max = HEIGHT_PADDLE // 2
+        reward_min = -reward_max
+
+        distance_y = abs(self.player_a.rect.centery - self.ball.rect.centery)
+        reward = -(distance_y / HEIGHT) * reward_max
+        if distance_y < HEIGHT_PADDLE // 2:
+            reward += reward_max
+        return max(reward_min, reward)
