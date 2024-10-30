@@ -139,4 +139,16 @@ class Paddle(pygame.sprite.Sprite):
         with open(path_file, 'wb') as file:
             pickle.dump(self.q_table, file)
 
-    
+    def trace_model(self, reward, episode):
+        self.rewards.append(reward)
+        self.episodes.append(episode)
+        self.mean.append(sum(self.rewards) / len(self.rewards))
+        plt.plot(self.episodes, self.mean, 'r')
+        plt.plot(self.episodes, self.rewards, 'b')
+        plt.xlabel("Reward", fontsize=18)
+        plt.ylabel("Episodes", fontsize=18)
+
+        try:
+            plt.savefig(f"player_{self.name}_evolution.png")
+        except OSError as e:
+            print(f"Error while save the file : {e}")
