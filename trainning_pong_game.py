@@ -189,3 +189,15 @@ class Game:
         if distance_y < HEIGHT_PADDLE // 2:
             reward += reward_max
         return max(reward_min, reward)
+
+    def define_state_distilled(self):
+        if (self.player_a.rect.centery - RADUIS <= self.ball.rect.centery <= self.player_a.rect.y + RADUIS):
+            state_distilled = 0
+        elif self.ball.rect.centery < self.player_a.rect.centery:
+            state_distilled = 1
+        else:
+            state_distilled = 2
+
+        return state_distilled
+
+     
