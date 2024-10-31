@@ -105,7 +105,7 @@ class Paddle(pygame.sprite.Sprite):
     def epsilon_greddy(self):
         self.epsilon = max(self.epsilon_min, self.epsilon* (1 - self.epsilon_decay))
 
-    def get_actions(self, state):
+    def get_action(self, state):
         if state not in self.q_table:
             self.q_table[state] = np.zeros(3)
 
@@ -200,4 +200,42 @@ class Game:
 
         return state_distilled
 
-     
+    def play(self):
+        action_a = 0
+        
+        while not self.end:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.end = True
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.end = True
+
+            self.player_b.simple_ai(self.ball.rect.y, SIMPLE_AI_SPEED)
+
+            state_distilled = self.define_state_distilled()
+
+            # For having the state of the game, we have to combine the distilled state and also the agent action
+            self.state = (
+                state_distilled, 
+                action_a
+            )
+
+            reward_a = 0
+            action_a = self.player_a.get_action()
+
+            if action_a == 1:
+                self.player_a.move_up(SPEED_PADDLE)
+            elif action_a == 2:
+                self.player_a.move_down(SPEED_PADDLE)
+
+            self.ball.update()
+
+            reward_a = self.get_reward()
+
+            if pygame.sprite.spritecollide(self.ball, [self.player_a], False):
+                self.ball.ball_bounce()
+            if pygame.sprite.spritecollide(self.ball, [self.player_b], False):
+                self.ball.ball_bounce()
+
+            
