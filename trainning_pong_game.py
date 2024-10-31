@@ -251,3 +251,13 @@ class Game:
                 self.ball.velocity[1] *= -1
             if self.ball.rect.y < 0:
                 self.ball.velocity[1] *= -1
+
+            state_distilled = self.define_state_distilled()
+
+            next_state = (
+                state_distilled, 
+                action_a
+            )
+
+            # Updating the q table after collect data
+            self.player_a.update_q_table(self.state, action_a, reward_a, next_state)
