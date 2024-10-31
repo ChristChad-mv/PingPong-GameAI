@@ -238,4 +238,16 @@ class Game:
             if pygame.sprite.spritecollide(self.ball, [self.player_b], False):
                 self.ball.ball_bounce()
 
-            
+            if self.ball.rect.x > WIDHT:
+                (self.ball.rect.x, self.ball.rect.y) = (WIDHT // 2, HEIGHT // 2)
+                self.ball.velocity[0] *= -1
+                self.score_a += 1
+            elif self.ball.rect.x < 0:
+                (self.ball.rect.x, self.ball.rect.y) = (WIDHT // 2, HEIGHT // 2)
+                self.ball.velocity[0] *= -1
+                self.score_b += 1
+
+            if self.ball.rect.y > HEIGHT - 2*RADUIS:
+                self.ball.velocity[1] *= -1
+            if self.ball.rect.y < 0:
+                self.ball.velocity[1] *= -1
