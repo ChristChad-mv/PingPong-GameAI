@@ -280,3 +280,15 @@ class Game:
             if self.score_a == SCORE_MAX or self.score_b == SCORE_MAX:
                 self.end = True
                 pygame.quit()
+
+if __name__ == "__main__":
+    player_b = Paddle(COLOR, WIDTH_PADDLE, HEIGHT_PADDLE, "B");
+    player_a = Paddle(COLOR, WIDTH_PADDLE, HEIGHT_PADDLE, "A")
+
+    for i in range(501):
+        game = Game(player_a, player_b)
+        game.play()
+        if i % 10 == 0:
+            player_a.save_model(i)
+        player_a.trace_model(game.reward, i)
+        print(f"Partie {i} : Epsilon A : {player_a.epsilon}\nScore : {game.score_a} : {game.score_b} Score B\nReward : {game.reward}\n\n")
