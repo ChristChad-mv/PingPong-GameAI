@@ -261,3 +261,22 @@ class Game:
 
             # Updating the q table after collect data
             self.player_a.update_q_table(self.state, action_a, reward_a, next_state)
+
+            self.screen.fill(WHITE_COULEUR)
+            pygame.draw.line(self.screen, COLOR, [WIDHT // 2, 0], [WIDHT // 2, HEIGHT], 5)
+            self.all_sprites.draw(self.screen)
+
+            font = pygame.font.Font(None, 74)
+            text = font.render(str(self.score_a), 1, COLOR)
+            self.screen.blit(text, (WIDHT // 4, 10))
+            text = font.render(str(self.score_b), 1, COLOR)
+            self.screen.blit(text, (3 * WIDHT // 4, 10))
+
+            self.all_sprites.update()
+
+            pygame.display.flip()
+            self.clock.tick(FPS)
+
+            if self.score_a == SCORE_MAX or self.score_b == SCORE_MAX:
+                self.end = True
+                pygame.quit()
