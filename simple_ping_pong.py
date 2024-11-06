@@ -78,18 +78,18 @@ def game_mode_choice(screen):
     while mode == "":
         screen.blit(background, (0,0))
 
-        text1 = font.render("Chose the game mode : ", True, COLOR)
+        text1 = font.render("Choose the game mode : ", True, COLOR)
         text2 = font.render("Play with a Friend", True, COLOR)
         text3 = font.render("Play vs AI", True, COLOR)
         
         # Adding text on the screen
         screen.blit(text1, (WIDHT // 2 - text1.get_width() // 2, HEIGHT // 2 - 50))
         screen.blit(text2, (WIDHT // 2 - text2.get_width() // 2, HEIGHT // 2))
-        screen.blit(text3, (WIDHT // 3 - text3.get_width() // 2 + 50))
+        screen.blit(text3, (WIDHT // 2 - text3.get_width() // 2, HEIGHT // 2 + 50))
 
         # Draw the buttons 
         pygame.draw.rect(screen, (0, 255, 0), (WIDHT // 2 - 150, HEIGHT // 2 - 20, 300, 40))
-        pygame.draw.rect(screen, (0, 255, 0), (WIDHT // 2 - 150, HEIGHT // 2 + 30, 300, 40))
+        pygame.draw.rect(screen, (0, 0, 255), (WIDHT // 2 - 150, HEIGHT // 2 + 30, 300, 40))
 
         text_button1 = font.render("Play with a Friend", True, WHITE_COULEUR)
         screen.blit(text_button1, (WIDHT // 2 - text_button1.get_width() // 2, HEIGHT // 2 - 10))
@@ -111,9 +111,11 @@ def game_mode_choice(screen):
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_position = pygame.mouse.get_pos()
-                if (WIDHT // 2 - 150 <= mouse_position[0] <= WIDHT // 2 + 150) and (HEIGHT // 2 - 20 <= mouse_position[1] <= HEIGHT // 2 + 20):
+                if (WIDHT // 2 - 150 <= mouse_position[0] <= WIDHT // 2 + 150) and \
+                   (HEIGHT // 2 - 20 <= mouse_position[1] <= HEIGHT // 2 + 20):
                     mode = "Friend"
-                elif (WIDHT // 2 - 150 <= mouse_position[0] <= WIDHT // 2 + 150) and (HEIGHT // 2 + 30 <= mouse_position[1] <= HEIGHT // 2 + 70 ):
+                elif (WIDHT // 2 - 150 <= mouse_position[0] <= WIDHT     // 2 + 150) and \
+                     (HEIGHT // 2 + 30 <= mouse_position[1] <= HEIGHT // 2 + 70):
                     mode = "AI"
 
     return mode
@@ -158,7 +160,7 @@ def play_game(screen):
             if event.type == pygame.QUIT:
                 running = False
 
-        keys = pygame.get_pressed()
+        keys = pygame.key.get_pressed()
         if mode == "Friend":
             if keys[pygame.K_UP]:
                 paddle_player_B.move_up(SPEED_PADDLE)
