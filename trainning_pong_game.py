@@ -17,8 +17,7 @@ SPEED_PADDLE = 10
 BALL_RADUIS = 10
 RADUIS = 10
 
-SCORE_MAX = 5
-
+SCORE_MAX = 6
 # Screen variables
 WIDHT = 840
 HEIGHT = 600
@@ -175,7 +174,7 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player_a, self.player_b, self.ball)
 
-        self.fin = False
+        self.end = False
         self.clock = pygame.time.Clock()
         self.score_a, self.score_b = 0, 0
         self.reward = 0
@@ -222,7 +221,7 @@ class Game:
             )
 
             reward_a = 0
-            action_a = self.player_a.get_action()
+            action_a = self.player_a.get_action(self.state)
 
             if action_a == 1:
                 self.player_a.move_up(SPEED_PADDLE)
