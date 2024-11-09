@@ -287,7 +287,7 @@ if __name__ == "__main__":
     player_b = Paddle(COLOR, WIDTH_PADDLE, HEIGHT_PADDLE, "B")
     player_a = Paddle(COLOR, WIDTH_PADDLE, HEIGHT_PADDLE, "A")
 
-    for i in range(5):
+    for i in range(501):
         game = Game(player_a, player_b)
         game.play()
         if (i) % 10 == 0:
