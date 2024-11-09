@@ -23,7 +23,7 @@ WIDHT = 840
 HEIGHT = 600
 
 # SIMPLE AI speed
-SIMPLE_AI_SPEED = 3
+SIMPLE_AI_SPEED = 4
 
 # FPS for Frequency per second - It's so important to accelerate the speed of the game regarding the number or trainning iteration we want to have
 FPS = 520
@@ -40,7 +40,7 @@ class Ball(pygame.sprite.Sprite):
         self.raduis = raduis
         self.width = width
         self.height = height
-        self.velocity = [np.random.uniform(3, 6), np.random.uniform(-4, 4)]
+        self.velocity = [np.random.uniform(2, 5), np.random.uniform(-4, 5)]
 
         pygame.draw.circle(self.image, color, (self.width // 2, self.height // 2), self.raduis)
 
@@ -67,6 +67,7 @@ class Paddle(pygame.sprite.Sprite):
 
         self.alpha = alpha
         self.gamma = gamma
+        self.epsilon = epsilon
         self.epsilon_decay = epsilon_decay
         self.epsilon_min = epsilon_min
         self.q_table = {}
@@ -91,9 +92,9 @@ class Paddle(pygame.sprite.Sprite):
             self.rect.y = (HEIGHT - self.height)
 
     def simple_ai(self, ball_position_y, pixels):
-        if ball_position_y + BALL_RADUIS > self.rect.y + self.height / 2:
+        if ball_position_y + RADUIS > self.rect.y + HEIGHT_PADDLE / 2:
             self.rect.y += pixels
-        if ball_position_y + BALL_RADUIS < self.rect.y + self.height / 2:
+        if ball_position_y + RADUIS < self.rect.y + HEIGHT_PADDLE/ 2:
             self.rect.y -= pixels
 
         if self.rect.y < 0:
@@ -102,7 +103,7 @@ class Paddle(pygame.sprite.Sprite):
             self.rect.y = (HEIGHT - self.height)
 
     def epsilon_greddy(self):
-        self.epsilon = max(self.epsilon_min, self.epsilon* (1 - self.epsilon_decay))
+        self.epsilon = max(self.epsilon_min, self.epsilon*(1 - self.epsilon_decay))
 
     def get_action(self, state):
         if state not in self.q_table:
@@ -159,20 +160,20 @@ class Game:
         self.screen = pygame.display.set_mode((WIDHT, HEIGHT))
         pygame.display.set_caption("Ping Pong Game Tranning AI")
 
-        self.player_a = player_a
-        self.player_a.rect.x = 0
-        self.player_a.rect.y = (HEIGHT - HEIGHT_PADDLE) // 2
+        self.paddle_a = player_a
+        self.paddle_a.rect.x = 0
+        self.paddle_a.rect.y = (HEIGHT - HEIGHT_PADDLE) // 2
 
-        self.player_b = player_b
-        self.player_b.rect.x = WIDHT - WIDTH_PADDLE
-        self.player_b.rect.y = (HEIGHT - HEIGHT_PADDLE) // 2
+        self.paddle_b = player_b
+        self.paddle_b.rect.x = WIDHT - WIDTH_PADDLE
+        self.paddle_b.rect.y = (HEIGHT - HEIGHT_PADDLE) // 2
 
         self.ball = Ball(COLOR, 2 * RADUIS, 2 * RADUIS, RADUIS)
         self.ball.rect.centerx = WIDHT // 2
         self.ball.rect.centery = HEIGHT // 2
 
         self.all_sprites = pygame.sprite.Group()
-        self.all_sprites.add(self.player_a, self.player_b, self.ball)
+        self.all_sprites.add(self.paddle_a, self.paddle_b, self.ball)
 
         self.end = False
         self.clock = pygame.time.Clock()
@@ -183,16 +184,16 @@ class Game:
         reward_max = HEIGHT_PADDLE // 2
         reward_min = -reward_max
 
-        distance_y = abs(self.player_a.rect.centery - self.ball.rect.centery)
-        reward = -(distance_y / HEIGHT) * reward_max
+        distance_y = abs(self.paddle_a.rect.centery - self.ball.rect.centery)
+        reward =- (distance_y / HEIGHT) * reward_max
         if distance_y < HEIGHT_PADDLE // 2:
             reward += reward_max
         return max(reward_min, reward)
 
     def define_state_distilled(self):
-        if (self.player_a.rect.centery - RADUIS <= self.ball.rect.centery <= self.player_a.rect.y + RADUIS):
+        if (self.paddle_a.rect.centery - RADUIS <= self.ball.rect.centery <= self.paddle_a.rect.y + RADUIS):
             state_distilled = 0
-        elif self.ball.rect.centery < self.player_a.rect.centery:
+        elif self.ball.rect.centery < self.paddle_a.rect.centery:
             state_distilled = 1
         else:
             state_distilled = 2
@@ -210,7 +211,7 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         self.end = True
 
-            self.player_b.simple_ai(self.ball.rect.y, SIMPLE_AI_SPEED)
+            self.paddle_b.simple_ai(self.ball.rect.y, SIMPLE_AI_SPEED)
 
             state_distilled = self.define_state_distilled()
 
@@ -221,20 +222,20 @@ class Game:
             )
 
             reward_a = 0
-            action_a = self.player_a.get_action(self.state)
+            action_a = self.paddle_a.get_action(self.state)
 
             if action_a == 1:
-                self.player_a.move_up(SPEED_PADDLE)
+                self.paddle_a.move_up(SPEED_PADDLE)
             elif action_a == 2:
-                self.player_a.move_down(SPEED_PADDLE)
+                self.paddle_a.move_down(SPEED_PADDLE)
 
             self.ball.update()
 
             reward_a = self.get_reward()
 
-            if pygame.sprite.spritecollide(self.ball, [self.player_a], False):
+            if pygame.sprite.spritecollide(self.ball, [self.paddle_a], False):
                 self.ball.ball_bounce()
-            if pygame.sprite.spritecollide(self.ball, [self.player_b], False):
+            if pygame.sprite.spritecollide(self.ball, [self.paddle_b], False):
                 self.ball.ball_bounce()
 
             if self.ball.rect.x > WIDHT:
@@ -259,7 +260,7 @@ class Game:
             )
 
             # Updating the q table after collect data
-            self.player_a.update_q_table(self.state, action_a, reward_a, next_state)
+            self.paddle_a.update_q_table(self.state, action_a, reward_a, next_state)
 
             self.screen.fill(WHITE_COULEUR)
             pygame.draw.line(self.screen, COLOR, [WIDHT // 2, 0], [WIDHT // 2, HEIGHT], 5)
@@ -276,18 +277,20 @@ class Game:
             pygame.display.flip()
             self.clock.tick(FPS)
 
+            self.reward += reward_a
+
             if self.score_a == SCORE_MAX or self.score_b == SCORE_MAX:
                 self.end = True
                 pygame.quit()
 
 if __name__ == "__main__":
-    player_b = Paddle(COLOR, WIDTH_PADDLE, HEIGHT_PADDLE, "B");
+    player_b = Paddle(COLOR, WIDTH_PADDLE, HEIGHT_PADDLE, "B")
     player_a = Paddle(COLOR, WIDTH_PADDLE, HEIGHT_PADDLE, "A")
 
-    for i in range(501):
+    for i in range(5):
         game = Game(player_a, player_b)
         game.play()
-        if i % 10 == 0:
+        if (i) % 10 == 0:
             player_a.save_model(i)
         player_a.trace_model(game.reward, i)
         print(f"Partie {i} : Epsilon A : {player_a.epsilon}\nScore : {game.score_a} : {game.score_b} Score B\nReward : {game.reward}\n\n")
